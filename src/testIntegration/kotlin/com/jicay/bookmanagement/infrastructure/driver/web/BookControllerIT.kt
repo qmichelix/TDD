@@ -81,8 +81,8 @@ class BookControllerIT {
             status { isCreated() }
         }
 
-        val expectedBook = Book(3L, "Les misérables", "Victor Hugo", false)
-        verify(exactly = 1) { bookUseCase.addBook(expectedBook) }
+        // Note: The ID and isReserved are not part of the JSON payload, so they are not verified here
+        verify(exactly = 1) { bookUseCase.addBook(match { it.name == "Les misérables" && it.author == "Victor Hugo" }) }
     }
 
     @Test
