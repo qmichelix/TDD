@@ -73,12 +73,14 @@ jobs:
         check_name: Unit tests results
         files: |
           build/test-results/test/*.xml
+          
     - name: Integration test
       env:
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
         SPRING_DATASOURCE_USERNAME: postgres
         SPRING_DATASOURCE_PASSWORD: password
       run: ./gradlew testIntegration
+      
     - name: Publish Integration test
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
@@ -86,8 +88,10 @@ jobs:
         check_name: Integration tests results
         files: |
           build/test-results/testIntegration/*.xml
+          
     - name: Architecture test
       run: ./gradlew testArchitecture
+      
     - name: Publish Architecture test
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
@@ -95,8 +99,10 @@ jobs:
         check_name: Architecture tests results
         files: |
           build/test-results/testArchitecture/*.xml
+          
     - name: Component test
       run: ./gradlew testComponent
+      
     - name: Publish Component test
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
@@ -104,8 +110,10 @@ jobs:
         check_name: Component tests results
         files: |
           build/test-results/testComponent/*.xml
+          
     - name: Run Coverage
       run: ./gradlew jacocoFullReport
+      
     - name: JaCoCo Code Coverage Report
       id: jacoco_reporter
       uses: PavanMudigonda/jacoco-reporter@v4.8
@@ -118,7 +126,9 @@ jobs:
         minimum_coverage: 80
         fail_below_threshold: false
         publish_only_summary: false
+        
     - name: Publish Coverage Summary
       run: cat _TMP/coverage-results.md >> $GITHUB_STEP_SUMMARY
+      
     - name: Run Mutation Tests
       run: ./gradlew pitest
