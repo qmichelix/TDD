@@ -51,7 +51,7 @@ class BookControllerIT {
             }
     }
 
-    @Test
+   @Test
     fun `rest route post book`() {
         justRun { bookUseCase.addBook(any()) }
     
@@ -70,9 +70,11 @@ class BookControllerIT {
             status { isCreated() }
         }
     
+        // Assuming the ID and isReserved are handled internally and not part of the JSON payload
         val expectedBook = Book(1L, "Les misérables", "Victor Hugo", false)
         verify(exactly = 1) { bookUseCase.addBook(expectedBook) }
     }
+
 
 
     @Test
