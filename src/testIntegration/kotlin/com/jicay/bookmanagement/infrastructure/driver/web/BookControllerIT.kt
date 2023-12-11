@@ -74,6 +74,7 @@ class BookControllerIT {
         verify(exactly = 1) { bookUseCase.addBook(expectedBook) }
     }
 
+
     @Test
     fun `rest route post book should return 400 when body is not good`() {
         justRun { bookUseCase.addBook(any()) }
