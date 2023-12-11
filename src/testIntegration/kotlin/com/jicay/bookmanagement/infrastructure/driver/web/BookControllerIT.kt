@@ -97,4 +97,18 @@ class BookControllerIT {
 
         verify(exactly = 0) { bookUseCase.addBook(any()) }
     }
+
+    @Test
+    fun `rest route post reserve book`() {
+        val bookId = 1L
+        justRun { bookUseCase.reserveBook(bookId) }
+
+        mockMvc.post("/books/$bookId/reserve") {
+            accept = APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+        }
+
+        verify(exactly = 1) { bookUseCase.reserveBook(bookId) }
+    }
 }
