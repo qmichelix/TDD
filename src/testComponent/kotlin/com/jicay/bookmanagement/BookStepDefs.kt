@@ -51,6 +51,21 @@ class BookStepDefs {
             .statusCode(200)
     }
 
+    @When("the user reserves the book {string}")
+    fun reserveBook(title: String) {
+        lastBookResult = given()
+            .`when`()
+            .post("/books/reserve/$title")
+            .then()
+            .statusCode(200)
+    }
+
+    @Then("the book {string} should be marked as reserved")
+    fun checkBookIsReserved(title: String) {
+        val book = lastBookResult.extract().jsonPath().getJsonObject("find { it.name == '$title' }")
+        assertThat(book.get("isReserved")).isEqualTo(true)
+    }
+
     @Then("the list should contains the following books in the same order")
     fun shouldHaveListOfBooks(payload: List<Map<String, Any>>) {
         val expectedResponse = payload.joinToString(separator = ",", prefix = "[", postfix = "]") { line ->
