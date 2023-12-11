@@ -11,5 +11,5 @@ Feature: the user can create, retrieve, and reserve the books
 
   Scenario: user reserves a book
     Given the user creates the book "1984" written by "George Orwell"
-    When the user reserves the book "1984"
+    When the user reserves the book with id 1
     Then the book "1984" should be marked as reserved
