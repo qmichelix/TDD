@@ -28,9 +28,9 @@ class BookDTOUseCaseTest {
             Book(1L, "Les Misérables", "Victor Hugo", false),
             Book(2L, "Hamlet", "William Shakespeare", false)
         )
-
+    
         val res = bookUseCase.getAllBooks()
-
+    
         assertThat(res).containsExactly(
             Book(2L, "Hamlet", "William Shakespeare", false),
             Book(1L, "Les Misérables", "Victor Hugo", false)
