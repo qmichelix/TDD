@@ -23,6 +23,10 @@ class BookController(
     @ResponseStatus(HttpStatus.CREATED)
     fun addBook(@RequestBody bookDTO: BookDTO) {
         bookUseCase.addBook(bookDTO.toDomain())
+    @CrossOrigin
+        @PostMapping("/{id}/reserve")
+        fun reserveBook(@PathVariable id: Long): ResponseEntity<Void> {
+            bookUseCase.reserveBook(id)
+            return ResponseEntity.ok().build()
     }
-
 }
