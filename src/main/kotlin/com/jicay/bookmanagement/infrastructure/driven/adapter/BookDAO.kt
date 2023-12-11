@@ -12,8 +12,10 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
         return namedParameterJdbcTemplate
             .query("SELECT * FROM BOOK", MapSqlParameterSource()) { rs, _ ->
                 Book(
+                    id = rs.getLong("id"),
                     name = rs.getString("title"),
-                    author = rs.getString("author")
+                    author = rs.getString("author"),
+                    isReserved = rs.getBoolean("is_reserved")
                 )
             }
     }
@@ -24,5 +26,31 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
                 "title" to book.name,
                 "author" to book.author
             ))
+    }
+
+    override fun getBookById(bookId: Long): Book? {
+        return namedParameterJdbcTemplate.queryForObject(
+            "SELECT * FROM BOOK WHERE id = :id",
+            MapSqlParameterSource("id", bookId)
+        ) { rs, _ ->
+            Book(
+                id = rs.getLong("id"),
+                name = rs.getString("title"),
+                author = rs.getString("author"),
+                isReserved = rs.getBoolean("is_reserved")
+            )
+        }
+    }
+
+    override fun updateBook(book: Book) {
+        namedParameterJdbcTemplate.update(
+            "UPDATE BOOK SET title = :title, author = :author, is_reserved = :isReserved WHERE id = :id",
+            mapOf(
+                "id" to book.id,
+                "title" to book.name,
+                "author" to book.author,
+                "isReserved" to book.isReserved
+            )
+        )
     }
 }
