@@ -51,14 +51,15 @@ class BookStepDefs {
             .statusCode(200)
     }
 
-    @When("the user reserves the book {string}")
-    fun reserveBook(title: String) {
+    @When("the user reserves the book with id {long}")
+    fun reserveBook(bookId: Long) {
         lastBookResult = given()
             .`when`()
-            .post("/books/reserve/{id}", title) // Remplacez {id} par l'ID réel du livre
+            .post("/books/$bookId/reserve")
             .then()
             .statusCode(200)
     }
+
 
     @Then("the book {string} should be marked as reserved")
     fun checkBookIsReserved(title: String) {
