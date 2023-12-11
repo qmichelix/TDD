@@ -22,7 +22,6 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.sql.ResultSet
 
-
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("testIntegration")
@@ -33,48 +32,44 @@ class BookDAOIT {
 
     @BeforeEach
     fun beforeEach() {
-        performQuery(
-            // language=sql
-            "DELETE FROM book"
-        )
+        performQuery("DELETE FROM book")
     }
 
     @Test
     fun `get all books from db`() {
         // GIVEN
         performQuery(
-            // language=sql
             """
-               insert into book (title, author)
+               insert into book (title, author, is_reserved)
                values 
-                   ('Hamlet', 'Shakespeare'),
-                   ('Les fleurs du mal', 'Beaudelaire'),
-                   ('Harry Potter', 'Rowling');
-            """.trimIndent())
+                   ('Hamlet', 'Shakespeare', false),
+                   ('Les fleurs du mal', 'Beaudelaire', false),
+                   ('Harry Potter', 'Rowling', false);
+            """.trimIndent()
+        )
 
         // WHEN
         val res = bookDAO.getAllBooks()
 
         // THEN
+        // Note: Les IDs doivent correspondre à ceux générés par la base de données
         assertThat(res).containsExactlyInAnyOrder(
-            Book("Hamlet", "Shakespeare"),
-            Book("Les fleurs du mal", "Beaudelaire"),
-            Book("Harry Potter", "Rowling")
+            Book(1L, "Hamlet", "Shakespeare", false),
+            Book(2L, "Les fleurs du mal", "Beaudelaire", false),
+            Book(3L, "Harry Potter", "Rowling", false)
         )
     }
 
     @Test
     fun `create book in db`() {
         // GIVEN
+        val newBook = Book(4L, "Les misérables", "Victor Hugo", false)
+
         // WHEN
-        bookDAO.createBook(Book("Les misérables", "Victor Hugo"))
+        bookDAO.createBook(newBook)
 
         // THEN
-        val res = performQuery(
-            // language=sql
-            "SELECT * from book"
-        )
-
+        val res = performQuery("SELECT * from book WHERE title = 'Les misérables'")
         assertThat(res.size).isEqualTo(1)
         assertThat(res[0]["id"]).isNotNull()
         assertThat(res[0]["id"] is Int).isTrue()
