@@ -52,7 +52,6 @@ class BookDAOIT {
         val res = bookDAO.getAllBooks()
 
         // THEN
-        // Note: Les IDs doivent correspondre à ceux générés par la base de données
         assertThat(res).containsExactlyInAnyOrder(
             Book(1L, "Hamlet", "Shakespeare", false),
             Book(2L, "Les fleurs du mal", "Beaudelaire", false),
