@@ -55,7 +55,7 @@ class BookStepDefs {
     fun reserveBook(title: String) {
         lastBookResult = given()
             .`when`()
-            .post("/books/reserve/$title")
+            .post("/books/reserve/{id}", title) // Remplacez {id} par l'ID réel du livre
             .then()
             .statusCode(200)
     }
