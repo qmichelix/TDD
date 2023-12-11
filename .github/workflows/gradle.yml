@@ -43,17 +43,27 @@ jobs:
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+      
     - name: Build
       run: ./gradlew bootJar
+      
     - name: Run detekt
       run: ./gradlew detekt
+      
     - name: Publish detekt summary
       run: cat build/reports/detekt/detekt.md >> $GITHUB_STEP_SUMMARY
+      
     - name: Upload SARIF to GitHub using the upload-sarif action
       uses: github/codeql-action/upload-sarif@v2
       if: success() || failure()
       with:
         sarif_file: build/reports/detekt/detekt.sarif
+
+    - name: Check PostgreSQL Connection
+      run: |
+        sudo apt-get install -y postgresql-client
+        pg_isready -h localhost -p 5432 -U postgres
+        
     - name: Unit test
       run: ./gradlew test
     - name: Publish Test
