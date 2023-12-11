@@ -1,0 +1,5 @@
+<changeSet id="202310100001" author="yourname">
+    <addColumn tableName="book">
+        <column name="is_reserved" type="boolean" defaultValueBoolean="false"/>
+    </addColumn>
+</changeSet>
