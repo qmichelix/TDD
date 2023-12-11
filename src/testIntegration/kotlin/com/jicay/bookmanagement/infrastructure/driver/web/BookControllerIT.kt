@@ -51,12 +51,11 @@ class BookControllerIT {
             }
     }
 
-    @Test
+     @Test
     fun `rest route post book`() {
         justRun { bookUseCase.addBook(any()) }
 
         mockMvc.post("/books") {
-            // language=json
             content = """
                 {
                   "name": "Les misérables",
@@ -69,10 +68,7 @@ class BookControllerIT {
             status { isCreated() }
         }
 
-        val expected = Book(
-            name = "Les misérables",
-            author = "Victor Hugo"
-        )
+        val expected = Book(1L, "Les misérables", "Victor Hugo", false) // Assurez-vous que l'ID et isReserved sont corrects
 
         verify(exactly = 1) { bookUseCase.addBook(expected) }
     }
