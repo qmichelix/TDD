@@ -13,6 +13,8 @@ import io.restassured.path.json.JsonPath
 import io.restassured.response.Response
 import io.restassured.response.ValidatableResponse
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.junit.jupiter.api.Assertions.fail
+
 
 class BookStepDefs {
     @LocalServerPort
