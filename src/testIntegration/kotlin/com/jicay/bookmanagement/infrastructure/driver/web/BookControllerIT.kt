@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.post
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.verify
+import com.ninjasquad.springmockk.MockkBean
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @ExtendWith(SpringExtension::class)
@@ -32,33 +33,35 @@ class BookControllerIT {
     fun `rest route get books`() {
         // GIVEN
         every { bookUseCase.getAllBooks() } returns listOf(
-            Book("A", "Author A", false),
-            Book("B", "Author B", false)
+            Book(1L, "A", "Author A", false),
+            Book(2L, "B", "Author B", false)
         )
 
         // WHEN
         mockMvc.get("/books")
             // THEN
             .andExpect {
-                status { isOk() }
-                content { contentType(APPLICATION_JSON) }
-                content { json(
+                status().isOk()
+                content().contentType(APPLICATION_JSON)
+                content().json(
                     // language=json
                     """
                         [
                           {
+                            "id": 1,
                             "name": "A",
                             "author": "Author A",
                             "isReserved": false
                           },
                           {
+                            "id": 2,
                             "name": "B",
                             "author": "Author B",
                             "isReserved": false
                           }
                         ]
                     """.trimIndent()
-                ) }
+                )
             }
     }
 
