@@ -82,10 +82,12 @@ class BookStepDefs {
         val actualBooks = lastResponse?.jsonPath()?.getList<Map<String, Any>>("")
         val expectedBooksAdjusted = expectedBooks.map { book ->
             book.toMutableMap().apply {
-                put("id", 0L) // Ajouter un ID par défaut
-                put("reserved", false) // Ajouter un statut de réservation par défaut
+                // Supprimez ces lignes, car elles ne sont plus nécessaires
+                // put("id", 0L) 
+                // put("reserved", false)
             }
         }
         assertThat(actualBooks).isEqualTo(expectedBooksAdjusted)
     }
+
 }
