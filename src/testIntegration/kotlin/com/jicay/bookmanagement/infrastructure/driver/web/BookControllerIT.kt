@@ -84,18 +84,6 @@ class BookControllerIT {
         verify(exactly = 1) { bookUseCase.addBook(match { it.name == "Les misérables" && it.author == "Victor Hugo" }) }
     }
 
-    @Test
-    fun `rest route post reserve book`() {
-        val bookId = 1L
-        justRun { bookUseCase.reserveBook(bookId) }
-
-        mockMvc.post("/books/$bookId/reserve")
-            .andExpect {
-                status().isOk
-            }
-
-        verify(exactly = 1) { bookUseCase.reserveBook(bookId) }
-    }
 
     @Test
     fun `rest route post book should return 400 when body is not good`() {
@@ -115,5 +103,18 @@ class BookControllerIT {
         }
 
         verify(exactly = 0) { bookUseCase.addBook(any()) }
+    }
+
+    @Test
+    fun `rest route post reserve book`() {
+        val bookId = 1L
+        justRun { bookUseCase.reserveBook(bookId) }
+
+        mockMvc.post("/books/$bookId/reserve")
+            .andExpect {
+                status().isOk
+            }
+
+        verify(exactly = 1) { bookUseCase.reserveBook(bookId) }
     }
 }
