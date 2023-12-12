@@ -17,10 +17,15 @@ class BookStepDefs {
     @LocalServerPort
     private var port: Int? = 0
 
+    companion object {
+        var lastBookResult: ValidatableResponse? = null
+    }
+
     @Before
     fun setup(scenario: Scenario) {
         RestAssured.baseURI = "http://localhost:$port"
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
+        lastBookResult = null
     }
 
     @When("the user creates the book {string} written by {string}")
@@ -60,11 +65,10 @@ class BookStepDefs {
             .statusCode(200)
     }
 
-
     @Then("the book {string} should be marked as reserved")
     fun checkBookIsReserved(title: String) {
-        val book = lastBookResult.extract().jsonPath().getJsonObject("find { it.name == '$title' }")
-        assertThat(book.get("isReserved")).isEqualTo(true)
+        val book = lastBookResult?.extract()?.jsonPath()?.getJsonObject("find { it.name == '$title' }")
+        assertThat(book?.get("isReserved")).isEqualTo(true)
     }
 
     @Then("the list should contains the following books in the same order")
@@ -77,14 +81,8 @@ class BookStepDefs {
                     }
                 }
             """.trimIndent()
-
         }
-        assertThat(lastBookResult.extract().body().jsonPath().prettify())
+        assertThat(lastBookResult?.extract()?.body()?.jsonPath()?.prettify())
             .isEqualTo(JsonPath(expectedResponse).prettify())
-
-    }
-
-    companion object {
-        lateinit var lastBookResult: ValidatableResponse
     }
 }
