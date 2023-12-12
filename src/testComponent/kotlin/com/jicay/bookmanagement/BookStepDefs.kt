@@ -65,7 +65,7 @@ class BookStepDefs {
             .statusCode(200)
     }
 
-    @Then("the book {string} should be marked as reserved")
+     @Then("the book {string} should be marked as reserved")
     fun checkBookIsReserved(title: String) {
         val response = lastBookResult?.extract()?.response()?.asString()
         if (!response.isNullOrEmpty()) {
@@ -77,7 +77,6 @@ class BookStepDefs {
         }
     }
 
-    
     @Then("the list should contains the following books in the same order")
     fun shouldHaveListOfBooks(expectedBooks: List<Map<String, Any>>) {
         val actualBooks = lastResponse?.jsonPath()?.getList<Map<String, Any>>("")
