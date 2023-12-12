@@ -1,5 +1,15 @@
-<changeSet id="202310100001" author="yourname">
-    <addColumn tableName="book">
-        <column name="is_reserved" type="boolean" defaultValueBoolean="false"/>
-    </addColumn>
-</changeSet>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="202310100001" author="yourname">
+        <addColumn tableName="book">
+            <column name="is_reserved" type="boolean" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
