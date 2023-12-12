@@ -60,11 +60,11 @@ class BookDAOIT {
     @Test
     fun `create book in db`() {
         // GIVEN
-        val newBook = Book(name = "Les misérables", author = "Victor Hugo", isReserved = false)
-
+        val newBook = Book(id = 0L, name = "Les misérables", author = "Victor Hugo", isReserved = false) // ID fixé à 0 ou un autre nombre arbitraire
+    
         // WHEN
         bookDAO.createBook(newBook)
-
+    
         // THEN
         val res = performQuery("SELECT * from book WHERE title = 'Les misérables'")
         assertThat(res.size).isEqualTo(1)
@@ -72,6 +72,7 @@ class BookDAOIT {
         assertThat(res[0]["author"]).isEqualTo("Victor Hugo")
         assertThat(res[0]["is_reserved"]).isEqualTo(false)
     }
+
 
     protected fun performQuery(sql: String): List<Map<String, Any>> {
         val hikariConfig = HikariConfig()
