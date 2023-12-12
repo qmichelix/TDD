@@ -27,6 +27,16 @@ import java.sql.ResultSet
 @ActiveProfiles("testIntegration")
 class BookDAOIT {
 
+    companion object {
+        @Container
+        val postgresqlContainer = PostgreSQLContainer<Nothing>("postgres:13-alpine").apply {
+            withDatabaseName("testdb")
+            withUsername("postgres")
+            withPassword("password")
+            start()
+        }
+    }
+
     @Autowired
     private lateinit var bookDAO: BookDAO
 
