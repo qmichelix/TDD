@@ -114,28 +114,5 @@ class BookDAOIT {
         return rows
     }
 
-    companion object {
-        @Container
-        private val postgresqlContainer: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:13-alpine")
-
-        @JvmStatic
-        @BeforeAll
-        fun beforeAll() {
-            postgresqlContainer.start()
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun afterAll() {
-            postgresqlContainer.stop()
-        }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun configureProperties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl)
-            registry.add("spring.datasource.username", postgresqlContainer::getUsername)
-            registry.add("spring.datasource.password", postgresqlContainer::getPassword)
-        }
-    }
+    
 }
