@@ -5,9 +5,10 @@ Feature: the user can create, retrieve, and reserve the books
     And the user creates the book "L'avare" written by "Molière"
     And the user get all books
     Then the list should contains the following books in the same order
-      | name | author | id | reserved |
-      | L'avare | Molière | 2 | false |
-      | Les Misérables | Victor Hugo | 1 | false |
+      | name          | author       | id | reserved |
+      | L'avare       | Molière      | 2  | false    |
+      | Les Misérables | Victor Hugo | 1  | false    |
+
 
   Scenario: user reserves a book
     Given the user creates the book "1984" written by "George Orwell"
