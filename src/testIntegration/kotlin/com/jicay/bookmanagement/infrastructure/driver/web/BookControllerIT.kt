@@ -2,10 +2,8 @@ package com.jicay.bookmanagement.infrastructure.driver.web
 
 import com.jicay.bookmanagement.domain.model.Book
 import com.jicay.bookmanagement.domain.usecase.BookUseCase
-import com.ninjasquad.springmockk.MockkBean
-import io.mockk.every
-import io.mockk.justRun
-import io.mockk.verify
+import com.jicay.bookmanagement.infrastructure.driver.web.dto.BookDTO
+import com.jicay.bookmanagement.infrastructure.driver.web.dto.toDto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,16 +13,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import io.mockk.every
+import io.mockk.justRun
+import io.mockk.verify
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @ExtendWith(SpringExtension::class)
-@WebMvcTest
+@WebMvcTest(BookController::class)
 class BookControllerIT {
+
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
     @MockkBean
     private lateinit var bookUseCase: BookUseCase
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
 
     @Test
     fun `rest route get books`() {
@@ -87,11 +89,10 @@ class BookControllerIT {
         val bookId = 1L
         justRun { bookUseCase.reserveBook(bookId) }
 
-        mockMvc.post("/books/$bookId/reserve") {
-            accept = APPLICATION_JSON
-        }.andExpect {
-            status { isOk() }
-        }
+        mockMvc.post("/books/$bookId/reserve")
+            .andExpect {
+                status().isOk
+            }
 
         verify(exactly = 1) { bookUseCase.reserveBook(bookId) }
     }
