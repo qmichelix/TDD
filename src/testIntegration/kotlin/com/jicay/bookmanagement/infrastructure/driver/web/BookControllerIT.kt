@@ -17,6 +17,7 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.verify
 import com.ninjasquad.springmockk.MockkBean
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @ExtendWith(SpringExtension::class)
@@ -37,9 +38,8 @@ class BookControllerIT {
             Book(2L, "B", "Author B", false)
         )
 
-        // WHEN
+        // WHEN & THEN
         mockMvc.get("/books")
-            // THEN
             .andExpect {
                 status().isOk()
                 content().contentType(APPLICATION_JSON)
