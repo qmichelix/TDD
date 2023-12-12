@@ -10,6 +10,7 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.path.json.JsonPath
+import io.restassured.response.Response
 import io.restassured.response.ValidatableResponse
 import org.springframework.boot.test.web.server.LocalServerPort
 
@@ -19,6 +20,7 @@ class BookStepDefs {
 
     companion object {
         var lastBookResult: ValidatableResponse? = null
+        var lastResponse: Response? = null
     }
 
     @Before
@@ -26,6 +28,7 @@ class BookStepDefs {
         RestAssured.baseURI = "http://localhost:$port"
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
         lastBookResult = null
+        lastResponse = null
     }
 
     @When("the user creates the book {string} written by {string}")
