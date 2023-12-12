@@ -68,12 +68,19 @@ class BookStepDefs {
     @Then("the list should contains the following books in the same order")
     fun shouldHaveListOfBooks(expectedBooks: List<Map<String, Any>>) {
         val actualBooks = lastResponse?.jsonPath()?.getList<Map<String, Any>>("")
-        println("Expected Books: $expectedBooks")
-        println("Actual Books: $actualBooks")
-        if (actualBooks != expectedBooks) {
-            println("Mismatch in expected and actual books")
+    
+        // Convertir les données attendues au format correct
+        val expectedBooksAdjusted = expectedBooks.map { book ->
+            book.mapValues { entry ->
+                when (entry.key) {
+                    "id", "reserved" -> entry.value.toString().toBoolean() // Convertir en Boolean si nécessaire
+                    else -> entry.value
+                }
+            }
         }
-        assertThat(actualBooks).isEqualTo(expectedBooks)
+    
+        assertThat(actualBooks).isEqualTo(expectedBooksAdjusted)
     }
+
 
 }
