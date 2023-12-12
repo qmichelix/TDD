@@ -65,7 +65,7 @@ class BookStepDefs {
             .statusCode(200)
     }
 
-     @Then("the book {string} should be marked as reserved")
+    @Then("the book {string} should be marked as reserved")
     fun checkBookIsReserved(title: String) {
         val response = lastBookResult?.extract()?.response()?.asString()
         if (!response.isNullOrEmpty()) {
