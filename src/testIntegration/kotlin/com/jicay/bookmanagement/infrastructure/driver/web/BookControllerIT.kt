@@ -30,8 +30,8 @@ class BookControllerIT {
     fun `rest route get books`() {
         // GIVEN
         every { bookUseCase.getAllBooks() } returns listOf(
-            Book(1L, "A", "Author A", false),
-            Book(2L, "B", "Author B", false)
+            Book("A", "Author A", false),
+            Book("B", "Author B", false)
         )
 
         // WHEN
@@ -45,13 +45,11 @@ class BookControllerIT {
                     """
                         [
                           {
-                            "id": 1,
                             "name": "A",
                             "author": "Author A",
                             "isReserved": false
                           },
                           {
-                            "id": 2,
                             "name": "B",
                             "author": "Author B",
                             "isReserved": false
@@ -81,8 +79,21 @@ class BookControllerIT {
             status { isCreated() }
         }
 
-        // Note: The ID and isReserved are not part of the JSON payload, so they are not verified here
         verify(exactly = 1) { bookUseCase.addBook(match { it.name == "Les misérables" && it.author == "Victor Hugo" }) }
+    }
+
+    @Test
+    fun `rest route post reserve book`() {
+        val bookId = 1L
+        justRun { bookUseCase.reserveBook(bookId) }
+
+        mockMvc.post("/books/$bookId/reserve") {
+            accept = APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+        }
+
+        verify(exactly = 1) { bookUseCase.reserveBook(bookId) }
     }
 
     @Test
@@ -103,19 +114,5 @@ class BookControllerIT {
         }
 
         verify(exactly = 0) { bookUseCase.addBook(any()) }
-    }
-
-    @Test
-    fun `rest route post reserve book`() {
-        val bookId = 1L
-        justRun { bookUseCase.reserveBook(bookId) }
-
-        mockMvc.post("/books/$bookId/reserve") {
-            accept = APPLICATION_JSON
-        }.andExpect {
-            status { isOk() }
-        }
-
-        verify(exactly = 1) { bookUseCase.reserveBook(bookId) }
     }
 }
