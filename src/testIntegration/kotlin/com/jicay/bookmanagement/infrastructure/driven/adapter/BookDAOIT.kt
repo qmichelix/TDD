@@ -27,7 +27,6 @@ import java.sql.ResultSet
 @ActiveProfiles("testIntegration")
 class BookDAOIT {
 
-
     @Autowired
     private lateinit var bookDAO: BookDAO
 
@@ -39,31 +38,29 @@ class BookDAOIT {
     @Test
     fun `get all books from db`() {
         // GIVEN
-        performQuery(
-            """
-               insert into book (title, author, is_reserved)
-               values 
-                   ('Hamlet', 'Shakespeare', false),
-                   ('Les fleurs du mal', 'Beaudelaire', false),
-                   ('Harry Potter', 'Rowling', false);
-            """.trimIndent()
-        )
+        performQuery("""
+            INSERT INTO book (title, author, is_reserved)
+            VALUES 
+                ('Hamlet', 'Shakespeare', false),
+                ('Les fleurs du mal', 'Beaudelaire', false),
+                ('Harry Potter', 'Rowling', false);
+        """.trimIndent())
 
         // WHEN
         val res = bookDAO.getAllBooks()
 
         // THEN
         assertThat(res).containsExactlyInAnyOrder(
-            Book(1L, "Hamlet", "Shakespeare", false),
-            Book(2L, "Les fleurs du mal", "Beaudelaire", false),
-            Book(3L, "Harry Potter", "Rowling", false)
+            Book("Hamlet", "Shakespeare", false),
+            Book("Les fleurs du mal", "Beaudelaire", false),
+            Book("Harry Potter", "Rowling", false)
         )
     }
 
     @Test
     fun `create book in db`() {
         // GIVEN
-        val newBook = Book(4L, "Les misérables", "Victor Hugo", false)
+        val newBook = Book("Les misérables", "Victor Hugo", false)
 
         // WHEN
         bookDAO.createBook(newBook)
@@ -75,7 +72,25 @@ class BookDAOIT {
         assertThat(res[0]["id"] is Int).isTrue()
         assertThat(res[0]["title"]).isEqualTo("Les misérables")
         assertThat(res[0]["author"]).isEqualTo("Victor Hugo")
+        assertThat(res[0]["is_reserved"]).isEqualTo(false)
     }
+
+    @Test
+    fun `reserve a book in db`() {
+        // GIVEN
+        val newBook = Book("1984", "George Orwell", false)
+        bookDAO.createBook(newBook)
+        val bookId = performQuery("SELECT id from book WHERE title = '1984'")[0]["id"] as Long
+
+        // WHEN
+        bookDAO.reserveBook(bookId)
+
+        // THEN
+        val res = performQuery("SELECT is_reserved FROM book WHERE id = $bookId")
+        assertThat(res[0]["is_reserved"]).isEqualTo(true)
+    }
+
+    // ... autres méthodes ...
 
     protected fun performQuery(sql: String): List<Map<String, Any>> {
         val hikariConfig = HikariConfig()
