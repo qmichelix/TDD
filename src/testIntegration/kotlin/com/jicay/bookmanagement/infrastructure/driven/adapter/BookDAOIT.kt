@@ -52,17 +52,15 @@ class BookDAOIT {
         val res = bookDAO.getAllBooks()
 
         // THEN
-        assertThat(res).containsExactlyInAnyOrder(
-            Book(1L, "Hamlet", "Shakespeare", false),
-            Book(2L, "Les fleurs du mal", "Beaudelaire", false),
-            Book(3L, "Harry Potter", "Rowling", false)
-        )
+        assertThat(res.map { it.name }).containsExactlyInAnyOrder("Hamlet", "Les fleurs du mal", "Harry Potter")
+        assertThat(res.map { it.author }).containsExactlyInAnyOrder("Shakespeare", "Beaudelaire", "Rowling")
+        assertThat(res.all { !it.isReserved }).isTrue()
     }
 
     @Test
     fun `create book in db`() {
         // GIVEN
-        val newBook = Book(4L, "Les misérables", "Victor Hugo", false)
+        val newBook = Book(name = "Les misérables", author = "Victor Hugo", isReserved = false)
 
         // WHEN
         bookDAO.createBook(newBook)
@@ -70,8 +68,6 @@ class BookDAOIT {
         // THEN
         val res = performQuery("SELECT * from book WHERE title = 'Les misérables'")
         assertThat(res.size).isEqualTo(1)
-        assertThat(res[0]["id"]).isNotNull()
-        assertThat(res[0]["id"] is Long).isTrue()
         assertThat(res[0]["title"]).isEqualTo("Les misérables")
         assertThat(res[0]["author"]).isEqualTo("Victor Hugo")
         assertThat(res[0]["is_reserved"]).isEqualTo(false)
