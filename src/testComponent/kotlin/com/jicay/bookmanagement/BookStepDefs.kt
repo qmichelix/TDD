@@ -84,5 +84,4 @@ class BookStepDefs {
         assertThat(actualBooks).isEqualTo(expectedBooks)
     }
 
-
 }
