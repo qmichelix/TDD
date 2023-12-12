@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+Aname: Java CI with Gradle
 
 on:
   push:
@@ -76,10 +76,12 @@ jobs:
           
     - name: Integration test
       env:
+        TESTCONTAINERS_RYUK_DISABLED: "true"
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
         SPRING_DATASOURCE_USERNAME: postgres
         SPRING_DATASOURCE_PASSWORD: password
       run: ./gradlew testIntegration
+
       
     - name: Publish Integration test
       uses: EnricoMi/publish-unit-test-result-action@v2
