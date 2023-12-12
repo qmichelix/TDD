@@ -9,20 +9,23 @@ import io.cucumber.java.en.When
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
-import io.restassured.response.Response
+import io.restassured.path.json.JsonPath
+import io.restassured.response.ValidatableResponse
 import org.springframework.boot.test.web.server.LocalServerPort
 
 class BookStepDefs {
     @LocalServerPort
     private var port: Int? = 0
 
-    private var lastResponse: Response? = null
+    companion object {
+        var lastBookResult: ValidatableResponse? = null
+    }
 
     @Before
     fun setup(scenario: Scenario) {
         RestAssured.baseURI = "http://localhost:$port"
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
-        lastResponse = null
+        lastBookResult = null
     }
 
     @When("the user creates the book {string} written by {string}")
@@ -48,17 +51,21 @@ class BookStepDefs {
         assertThat(lastResponse?.statusCode).isEqualTo(200)
     }
 
-    @When("the user reserves the book with id {long}")
+     @When("the user reserves the book with id {long}")
     fun reserveBook(bookId: Long) {
-        lastResponse = given().post("/books/$bookId/reserve").andReturn()
-        assertThat(lastResponse?.statusCode).isEqualTo(200)
+        lastBookResult = given()
+            .`when`()
+            .post("/books/$bookId/reserve")
+            .then()
+            .statusCode(200)
     }
 
     @Then("the book {string} should be marked as reserved")
     fun checkBookIsReserved(title: String) {
-        val books = lastResponse?.jsonPath()?.getList<Map<String, Any>>("")
-        val book = books?.find { it["name"] == title }
-        assertThat(book?.get("isReserved")).isEqualTo(true)
+        val response = lastBookResult?.extract()?.response()?.asString()
+        val jsonPath = JsonPath.from(response)
+        val isReserved = jsonPath.getBoolean("find { it.name == '$title' }.isReserved")
+        assertThat(isReserved).isEqualTo(true)
     }
 
     @Then("the list should contains the following books in the same order")
