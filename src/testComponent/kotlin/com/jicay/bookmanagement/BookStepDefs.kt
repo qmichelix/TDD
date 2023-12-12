@@ -56,25 +56,27 @@ class BookStepDefs {
         assertThat(lastResponse?.statusCode).isEqualTo(200)
     }
 
-     @When("the user reserves the book with id {long}")
+    @When("the user reserves the book with id {long}")
     fun reserveBook(bookId: Long) {
-        lastBookResult = given()
+        val response = given()
             .`when`()
             .post("/books/$bookId/reserve")
-            .then()
-            .statusCode(200)
+            .andReturn()
+    
+        lastBookResult = response.then().statusCode(200)
+        lastResponse = response
     }
+
 
     @Then("the book {string} should be marked as reserved")
     fun checkBookIsReserved(title: String) {
-        val response = lastBookResult?.extract()?.response()?.asString()
+        val response = lastResponse?.asString()
         if (!response.isNullOrEmpty()) {
             val jsonPath = JsonPath.from(response)
             val isReserved = jsonPath.getBoolean("find { it.name == '$title' }.isReserved")
             assertThat(isReserved).isEqualTo(true)
         } else {
-            // Si aucune réponse n'est attendue, vérifiez simplement le code de statut ou ajustez en conséquence
-            assertThat(lastBookResult?.statusCode()).isEqualTo(200)
+            fail("La réponse est vide ou nulle")
         }
     }
 
