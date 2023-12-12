@@ -70,6 +70,10 @@ class BookStepDefs {
         val actualBooks = lastResponse?.jsonPath()?.getList<Map<String, Any>>("")
         println("Expected Books: $expectedBooks")
         println("Actual Books: $actualBooks")
+        if (actualBooks != expectedBooks) {
+            println("Mismatch in expected and actual books")
+        }
         assertThat(actualBooks).isEqualTo(expectedBooks)
     }
+
 }
