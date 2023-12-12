@@ -15,7 +15,6 @@ import io.restassured.response.ValidatableResponse
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.junit.jupiter.api.Assertions.fail
 
-
 class BookStepDefs {
     @LocalServerPort
     private var port: Int? = 0
@@ -37,40 +36,39 @@ class BookStepDefs {
     fun createBook(title: String, author: String) {
         lastResponse = given()
             .contentType(ContentType.JSON)
-            .body(
-                """
-                    {
-                      "name": "$title",
-                      "author": "$author"
-                    }
-                """.trimIndent()
-            )
+            .body("""
+                {
+                  "name": "$title",
+                  "author": "$author"
+                }
+            """.trimIndent())
             .post("/books")
             .andReturn()
+        println("Response for createBook: ${lastResponse?.prettyPrint()}")
         assertThat(lastResponse?.statusCode).isEqualTo(201)
     }
 
     @When("the user get all books")
     fun getAllBooks() {
         lastResponse = given().get("/books").andReturn()
+        println("Response for getAllBooks: ${lastResponse?.prettyPrint()}")
         assertThat(lastResponse?.statusCode).isEqualTo(200)
     }
 
     @When("the user reserves the book with id {long}")
     fun reserveBook(bookId: Long) {
-        val response = given()
+        lastBookResult = given()
             .`when`()
             .post("/books/$bookId/reserve")
-            .andReturn()
-    
-        lastBookResult = response.then().statusCode(200)
-        lastResponse = response
+            .then()
+            .statusCode(200)
+        println("Response for reserveBook: ${lastBookResult?.extract()?.response()?.prettyPrint()}")
     }
-
 
     @Then("the book {string} should be marked as reserved")
     fun checkBookIsReserved(title: String) {
-        val response = lastResponse?.asString()
+        val response = lastBookResult?.extract()?.response()?.asString()
+        println("Response for checkBookIsReserved: $response")
         if (!response.isNullOrEmpty()) {
             val jsonPath = JsonPath.from(response)
             val isReserved = jsonPath.getBoolean("find { it.name == '$title' }.isReserved")
@@ -80,20 +78,9 @@ class BookStepDefs {
         }
     }
 
-
     @Then("the list should contains the following books in the same order")
     fun shouldHaveListOfBooks(expectedBooks: List<Map<String, Any>>) {
         val actualBooks = lastResponse?.jsonPath()?.getList<Map<String, Any>>("")
-        val expectedBooksAdjusted = expectedBooks.map { book ->
-            book.mapValues { 
-                // Convertir les valeurs booléennes et numériques en chaînes si nécessaire
-                it.value.toString() 
-            }
-        }
-        assertThat(actualBooks).isEqualTo(expectedBooksAdjusted)
+        assertThat(actualBooks).isEqualTo(expectedBooks)
     }
-
-
-
-
 }
