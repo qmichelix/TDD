@@ -16,7 +16,7 @@ Le projet suit une architecture propre, organisée en différentes couches :
   - `driver/web/`: Contrôleurs et interfaces web.
 - `test/`: Contient tous les tests, y compris les tests unitaires, d'intégration et de composants.
 
-## Modifications
+## Modifications comparé au projet initial de Kotlin fourni
 
 ### Test d'Intégration (`BookDAOIT.kt`)
 
