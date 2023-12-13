@@ -75,6 +75,6 @@ Pour configurer et exécuter le projet :
 
 ## Statut du Projet
 
-[![Build Status](https://github.com/votre-username/votre-repo/actions/workflows/gradle.yml/badge.svg)](https://github.com/votre-username/votre-repo/actions)
+![image](https://github.com/qmichelix/TDD/assets/109591838/5221fb6d-73f9-41ad-a550-96bd6bf8d1eb)
 
 _Dernière mise à jour : Décembre 2023_
