@@ -76,5 +76,6 @@ Pour configurer et exécuter le projet :
 ## Statut du Projet
 
 ![image](https://github.com/qmichelix/TDD/assets/109591838/5221fb6d-73f9-41ad-a550-96bd6bf8d1eb)
+Le build s'est fait en 5mins et 07secondes en passant tous les tests :D à la 67ème execution du workflow.
 
 _Dernière mise à jour : 14 Décembre 2023_
